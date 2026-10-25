@@ -1,0 +1,29 @@
+# Виртуальное окружение Python
+venv/
+ENV/
+env/
+.venv/
+
+# Секреты и настройки среды
+.env
+*.env
+
+# Служебные файлы Python и Django
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+db.sqlite3
+db.sqlite3-journal
+
+# Статические файлы и медиа
+media/
+staticfiles/
+*.log
+
+# Файлы IDE и операционной системы
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
