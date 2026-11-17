@@ -1,6 +1,6 @@
 const form = document.getElementById('test-form');
 const bar = document.getElementById('progress');
-const total = form.querySelectorAll('.card').length;
+const total = form.querySelectorAll('.question-card').length;
 
 form.addEventListener('change', () => {
   const answered = new Set(

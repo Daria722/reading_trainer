@@ -1,6 +1,342 @@
-.reading-text {
-  font-size: 1.2rem;
-  line-height: 1.8;
-  max-width: 800px;
+:root {
+  --bg: #f4f7f5;
+  --ink: #17342c;
+  --muted: #5b7068;
+  --accent: #247a6b;
+  --accent-dark: #1c6155;
+  --white: #ffffff;
+  --line: rgba(23, 52, 44, 0.09);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Jost', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 1.05rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+main { flex: 1; }
+
+h1, h2, h3, h4, h5, .serif {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ---------- Пастельные тона ---------- */
+.tone-mint  { background: linear-gradient(145deg, #e6f4ec, #cfe6db); }
+.tone-peach { background: linear-gradient(145deg, #fcefdf, #f5d9bc); }
+.tone-blue  { background: linear-gradient(145deg, #e8eff9, #d3def0); }
+.tone-lilac { background: linear-gradient(145deg, #f1ebf8, #ddd0ec); }
+.tone-white { background: var(--white); }
+
+/* ---------- Шапка ---------- */
+.site-nav { padding: 1.4rem 0 0.6rem; }
+.brand {
+  display: inline-block;
+  text-decoration: none;
+  line-height: 1.1;
+}
+.brand-name {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.brand-sub {
+  display: block;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
+.brand:hover .brand-name { color: var(--accent); }
+
+/* ---------- Hero (главная) ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 40px;
+  padding: 4.5rem 3rem;
+  margin: 1.2rem 0 4rem;
+  text-align: center;
+  background: linear-gradient(135deg, #e6f4ec 0%, #fcefdf 55%, #e8eff9 100%);
+}
+.hero::before, .hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+}
+.hero::before {
+  width: 320px; height: 320px;
+  left: -100px; top: -120px;
+  background: rgba(255, 255, 255, 0.55);
+}
+.hero::after {
+  width: 260px; height: 260px;
+  right: -70px; bottom: -110px;
+  background: rgba(241, 235, 248, 0.9);
+}
+.hero > * { position: relative; z-index: 1; }
+
+.eyebrow {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 0.35rem 1.1rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+}
+.hero-title {
+  font-size: clamp(2.6rem, 7vw, 4.8rem);
+  line-height: 1.05;
+  margin: 1.2rem 0 0.8rem;
+}
+.hero-lead {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+.hero-text {
+  max-width: 640px;
+  margin: 0 auto 2rem;
+  color: var(--muted);
+  font-size: 1.15rem;
+  line-height: 1.7;
+}
+.hero-steps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-bottom: 2.2rem;
+}
+.hero-step {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  padding: 0.5rem 1.2rem;
+  font-weight: 500;
+}
+.hero-step b {
+  font-family: 'Playfair Display', serif;
+  color: var(--accent);
+  margin-right: 0.4rem;
+}
+
+/* ---------- Заголовки секций ---------- */
+.section-title {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+.section-sub {
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 2.5rem;
+}
+
+/* ---------- Карточки текстов ---------- */
+.text-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 2rem;
+  border-radius: 32px;
+  text-decoration: none;
+  color: var(--ink);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.text-card::after {
+  content: attr(data-num);
+  position: absolute;
+  right: -0.3rem;
+  top: -1.4rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 9rem;
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+}
+.text-card > * { position: relative; z-index: 1; }
+.text-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 36px rgba(23, 52, 44, 0.1);
+  color: var(--ink);
+}
+.card-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 4rem; }
+.pill {
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 999px;
+  padding: 0.25rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.card-title-serif {
+  font-size: 1.7rem;
+  line-height: 1.2;
+  margin-bottom: 0.7rem;
+}
+.card-desc { color: var(--muted); margin-bottom: 1.6rem; }
+.card-cta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.card-cta .arrow {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease;
+}
+.text-card:hover .arrow { transform: translateX(6px); }
+
+/* ---------- Шапка страницы (чтение / вопросы / результат) ---------- */
+.page-hero {
+  border-radius: 36px;
+  padding: 2.5rem 3rem;
+  margin: 1rem auto 2rem;
+  max-width: 900px;
+}
+.page-hero .eyebrow { margin-bottom: 1rem; }
+.page-hero-title {
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
+  line-height: 1.15;
+  margin: 0;
+}
+.page-hero-meta { margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+/* ---------- Кнопки ---------- */
+.btn-main {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.85rem 2.3rem;
+  font-weight: 500;
+  font-size: 1.1rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.btn-main:hover { background: var(--accent-dark); color: #fff; transform: translateY(-2px); }
+.btn-main:disabled { opacity: 0.6; transform: none; }
+
+/* ---------- Чтение ---------- */
+.timer-pill {
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 0.4rem 1.3rem;
+  font-weight: 600;
+  font-size: 1.4rem;
+  font-variant-numeric: tabular-nums;
+}
+.reading-card {
+  max-width: 900px;
   margin: 0 auto;
+  background: var(--white);
+  border-radius: 32px;
+  padding: 2.5rem 3rem;
+  border: 1px solid var(--line);
+}
+.reading-text { font-size: 1.25rem; line-height: 1.9; }
+
+/* ---------- Тест ---------- */
+.question-card {
+  max-width: 900px;
+  margin: 0 auto 1.4rem;
+  background: var(--white);
+  border-radius: 28px;
+  padding: 1.8rem 2.2rem;
+  border: 1px solid var(--line);
+}
+.form-check { margin-bottom: 0.6rem; }
+.form-check-input:checked { background-color: var(--accent); border-color: var(--accent); }
+.form-check-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.2rem rgba(36, 122, 107, 0.2);
+}
+.progress {
+  max-width: 900px;
+  margin: 0 auto 2rem;
+  height: 10px;
+  border-radius: 999px;
+  background: #dfe9e4;
+}
+.progress-bar { background: var(--accent); border-radius: 999px; }
+
+/* ---------- Результат ---------- */
+.metric-card {
+  height: 100%;
+  padding: 1.8rem;
+  border-radius: 28px;
+}
+.metric-card.accent-border { border: 2px solid var(--accent); }
+.metric-label { color: var(--muted); font-size: 0.95rem; margin-bottom: 0.4rem; }
+.metric-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.7rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.metric-unit { color: var(--muted); font-size: 0.9rem; margin-top: 0.3rem; }
+
+/* ---------- Футер ---------- */
+.site-footer {
+  margin-top: 5rem;
+  background: linear-gradient(135deg, #e6f4ec, #e8eff9);
+  border-radius: 40px 40px 0 0;
+  padding: 3rem 0 1.5rem;
+}
+.footer-brand { font-size: 1.6rem; margin-bottom: 0.5rem; }
+.footer-text { color: var(--muted); max-width: 340px; }
+.footer-title {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.9rem;
+}
+.footer-links { list-style: none; padding: 0; margin: 0; }
+.footer-links li { margin-bottom: 0.5rem; color: var(--muted); }
+.footer-links a { color: var(--ink); text-decoration: none; }
+.footer-links a:hover { color: var(--accent); }
+.footer-bottom {
+  margin-top: 2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (max-width: 576px) {
+  .hero { padding: 3rem 1.4rem; border-radius: 28px; }
+  .page-hero, .reading-card { padding: 1.6rem 1.4rem; }
+  .question-card { padding: 1.4rem; }
 }

@@ -1,35 +1,54 @@
 {% extends 'base.html' %}
+{% block title %}Результаты — {{ result.text.title }}{% endblock %}
 {% block content %}
-<h1 class="h3 mb-4">Результаты: «{{ result.text.title }}»</h1>
 
-<div class="row g-3 mb-4">
-  <div class="col-md-3"><div class="card text-center"><div class="card-body">
-    <div class="text-muted">Скорость V</div>
-    <div class="display-6">{{ result.words_per_minute|floatformat:1 }}</div>
-    <small>слов/мин</small></div></div></div>
+<section class="page-hero tone-blue">
+  <span class="eyebrow">Шаг 3 · Результаты</span>
+  <h1 class="page-hero-title">{{ result.text.title }}</h1>
+  <div class="page-hero-meta">
+    <span class="pill">{{ result.correct_answers }} из {{ result.questions_total }} верных ответов</span>
+  </div>
+</section>
 
-  <div class="col-md-3"><div class="card text-center"><div class="card-body">
-    <div class="text-muted">Понимание Q</div>
-    <div class="display-6">{{ result.comprehension|floatformat:1 }}%</div>
-    <small>{{ result.correct_answers }} из {{ result.questions_total }}</small></div></div></div>
-
-  <div class="col-md-3"><div class="card text-center"><div class="card-body">
-    <div class="text-muted">Время</div>
-    <div class="display-6">{{ result.reading_time_seconds|floatformat:0 }} с</div>
-    <small>норматив: {{ result.norm_time_seconds|floatformat:0 }} с</small></div></div></div>
-
-  <div class="col-md-3"><div class="card text-center border-success"><div class="card-body">
-    <div class="text-muted">Эффективность E</div>
-    <div class="display-6">{{ result.efficiency|floatformat:1 }}</div>
-    <small>E = V · Q</small></div></div></div>
+<div class="row g-4">
+  <div class="col-md-6 col-lg-3">
+    <div class="metric-card tone-white">
+      <div class="metric-label">Скорость чтения V</div>
+      <div class="metric-value">{{ result.words_per_minute|floatformat:1 }}</div>
+      <div class="metric-unit">слов в минуту</div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3">
+    <div class="metric-card tone-mint">
+      <div class="metric-label">Понимание Q</div>
+      <div class="metric-value">{{ result.comprehension|floatformat:0 }}%</div>
+      <div class="metric-unit">{{ result.correct_answers }} из {{ result.questions_total }} верно</div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3">
+    <div class="metric-card tone-peach">
+      <div class="metric-label">Время чтения</div>
+      <div class="metric-value">{{ result.reading_time_seconds|floatformat:0 }} с</div>
+      <div class="metric-unit">норматив: {{ result.norm_time_seconds|floatformat:0 }} с</div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3">
+    <div class="metric-card tone-lilac accent-border">
+      <div class="metric-label">Эффективность E</div>
+      <div class="metric-value">{{ result.efficiency|floatformat:1 }}</div>
+      <div class="metric-unit">E = V · Q</div>
+    </div>
+  </div>
 </div>
 
-<p>
+<p class="text-center mt-5 fs-5">
   {% if result.reading_time_seconds > result.norm_time_seconds %}
-    Ты читала медленнее расчётного норматива.
+    Вы читали медленнее расчётного норматива.
   {% else %}
-    Ты уложилась в расчётный норматив времени.
+    Вы уложились в расчётный норматив времени.
   {% endif %}
 </p>
-<a href="{% url 'text_list' %}" class="btn btn-primary">К списку текстов</a>
+<div class="text-center mt-4">
+  <a href="{% url 'text_list' %}" class="btn-main">К списку текстов</a>
+</div>
 {% endblock %}

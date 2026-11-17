@@ -1,19 +1,46 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1 class="h3 mb-4">Выберите текст для чтения</h1>
-<div class="row g-3">
-  {% for t in texts %}
-  <div class="col-md-6 col-lg-4">
-    <div class="card h-100 shadow-sm">
-      <div class="card-body d-flex flex-column">
-        <h5 class="card-title">{{ t.title }}</h5>
-        <p class="text-muted">Слов: {{ t.word_count }}</p>
-        <a href="{% url 'text_read' t.pk %}" class="btn btn-primary mt-auto">Читать</a>
-      </div>
-    </div>
+
+<section class="hero">
+  <span class="eyebrow">Тренажёр скорости чтения</span>
+  <h1 class="hero-title">Reading Trainer</h1>
+  <p class="hero-lead">Читайте быстрее. Понимайте глубже.</p>
+  <p class="hero-text">
+    Скорость без понимания ничего не стоит, а понимание без скорости съедает время.
+    Мы измеряем и то и другое: вы читаете текст на время, отвечаете на вопросы
+    и сразу видите свою скорость, качество понимания и итоговый показатель эффективности.
+    Пара минут за раз, и вы узнаете, как на самом деле работает ваше внимание.
+  </p>
+  <div class="hero-steps">
+    <span class="hero-step"><b>01</b>Прочитайте текст</span>
+    <span class="hero-step"><b>02</b>Ответьте на вопросы</span>
+    <span class="hero-step"><b>03</b>Узнайте результат</span>
   </div>
-  {% empty %}
-  <p>Текстов пока нет. Добавь их через админ-панель.</p>
-  {% endfor %}
-</div>
+  <a href="#texts" class="btn-main">Выбрать текст</a>
+</section>
+
+<section id="texts">
+  <h2 class="section-title">Выберите текст</h2>
+  <p class="section-sub">Каждый текст сопровождается вопросами</p>
+
+  <div class="row g-4">
+    {% for t in texts %}
+    <div class="col-md-6 col-lg-4">
+      <a href="{% url 'text_read' t.pk %}"
+         class="text-card {% cycle 'tone-mint' 'tone-peach' 'tone-blue' 'tone-lilac' %}"
+         data-num="{{ forloop.counter|stringformat:'02d' }}">
+        <div class="card-pills">
+          <span class="pill">{{ t.word_count }} слов</span>
+          <span class="pill">≈ {% widthratio t.word_count 180 1 %} мин</span>
+        </div>
+        <h3 class="card-title-serif">{{ t.title }}</h3>
+        <p class="card-desc">Проверьте, как быстро вы читаете и сколько запоминаете.</p>
+        <span class="card-cta">Начать чтение <span class="arrow">→</span></span>
+      </a>
+    </div>
+    {% empty %}
+    <p class="text-center text-muted">Текстов пока нет. Добавьте их через админ-панель.</p>
+    {% endfor %}
+  </div>
+</section>
 {% endblock %}
