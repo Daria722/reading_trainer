@@ -135,3 +135,18 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+TEMPLATES[0]['DIRS'] = [BASE_DIR.parent / 'frontend' / 'templates']
+
+LANGUAGE_CODE = 'ru'
+TIME_ZONE = 'Belarus/Grodno'
+
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR.parent / 'frontend' / 'static']
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR.parent / 'media'
+
+# Параметры методики
+QUESTIONS_PER_TEST = 5     # N случайных вопросов
+NORM_WPM = 180             # нормативная скорость чтения, слов/мин
