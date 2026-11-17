@@ -139,7 +139,7 @@ MAILERS = {
 TEMPLATES[0]['DIRS'] = [BASE_DIR.parent / 'frontend' / 'templates']
 
 LANGUAGE_CODE = 'ru'
-TIME_ZONE = 'Belarus/Grodno'
+TIME_ZONE = 'Europe/Minsk'
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR.parent / 'frontend' / 'static']

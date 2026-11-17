@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="h3 mb-4">Результаты: «{{ result.text.title }}»</h1>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="card text-center"><div class="card-body">
+    <div class="text-muted">Скорость V</div>
+    <div class="display-6">{{ result.words_per_minute|floatformat:1 }}</div>
+    <small>слов/мин</small></div></div></div>
+
+  <div class="col-md-3"><div class="card text-center"><div class="card-body">
+    <div class="text-muted">Понимание Q</div>
+    <div class="display-6">{{ result.comprehension|floatformat:1 }}%</div>
+    <small>{{ result.correct_answers }} из {{ result.questions_total }}</small></div></div></div>
+
+  <div class="col-md-3"><div class="card text-center"><div class="card-body">
+    <div class="text-muted">Время</div>
+    <div class="display-6">{{ result.reading_time_seconds|floatformat:0 }} с</div>
+    <small>норматив: {{ result.norm_time_seconds|floatformat:0 }} с</small></div></div></div>
+
+  <div class="col-md-3"><div class="card text-center border-success"><div class="card-body">
+    <div class="text-muted">Эффективность E</div>
+    <div class="display-6">{{ result.efficiency|floatformat:1 }}</div>
+    <small>E = V · Q</small></div></div></div>
+</div>
+
+<p>
+  {% if result.reading_time_seconds > result.norm_time_seconds %}
+    Ты читала медленнее расчётного норматива.
+  {% else %}
+    Ты уложилась в расчётный норматив времени.
+  {% endif %}
+</p>
+<a href="{% url 'text_list' %}" class="btn btn-primary">К списку текстов</a>
+{% endblock %}

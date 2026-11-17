@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h3 mb-0">{{ text.title }}</h1>
+  <span class="badge bg-secondary fs-5" id="timer">00:00</span>
+</div>
+
+<div id="text-block" class="card card-body reading-text">
+  {{ text.content|linebreaks }}
+</div>
+
+<div id="done-block" class="card card-body text-center d-none">
+  <p class="mb-1">Текст скрыт. Время чтения: <strong id="final-time"></strong></p>
+  <a href="{% url 'text_test' text.pk %}" class="btn btn-success btn-lg mt-2">Перейти к вопросам</a>
+</div>
+
+<button id="finish-btn" class="btn btn-primary btn-lg mt-3"
+        data-finish-url="{% url 'text_finish' text.pk %}">Я прочитал(а)</button>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/timer.js' %}"></script>
+{% endblock %}
