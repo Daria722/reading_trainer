@@ -101,7 +101,9 @@ def result(request, pk):
     badge, extra_badges = get_badges(result.words_per_minute, result.comprehension)
 
     # Сравнение с другими попытками на этом же тексте (текущая не учитывается)
-    others = ReadingResult.objects.filter(text=result.text).exclude(pk=result.pk)
+    others = (ReadingResult.objects
+              .filter(text=result.text, words_per_minute__lte=600)
+              .exclude(pk=result.pk))
     stats = others.aggregate(
         attempts=Count('pk'),
         avg_wpm=Avg('words_per_minute'),
@@ -112,15 +114,21 @@ def result(request, pk):
     compare = []
     if stats['attempts']:
         pairs = [
-            ('Скорость V', result.words_per_minute, stats['avg_wpm'], 'слов/мин', 0),
-            ('Понимание Q', result.comprehension, stats['avg_q'], '%', 0),
-            ('Эффективность E', result.efficiency, stats['avg_e'], '', 0),
+            ('Скорость V', result.words_per_minute, stats['avg_wpm'], 'слов/мин', 'слов/мин'),
+            ('Понимание Q', result.comprehension, stats['avg_q'], '%', 'п.п.'),
+            ('Эффективность E', result.efficiency, stats['avg_e'], 'усв. слов/мин', 'усв. слов/мин'),
         ]
-        for label, value, avg, unit, _ in pairs:
+        for label, value, avg, unit, diff_unit in pairs:
             diff = value - avg
             compare.append({
-                'label': label, 'value': value, 'avg': avg, 'unit': unit,
-                'up': diff >= 0, 'abs_diff': abs(diff),
+                'label': label,
+                'value': value,
+                'avg': avg,
+                'unit': unit,
+                'diff_unit': diff_unit,
+                'up': diff >= 0,
+                'same': abs(diff) < 0.5,
+                'abs_diff': abs(diff),
             })
 
     time_diff = abs(result.reading_time_seconds - result.norm_time_seconds)

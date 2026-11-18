@@ -97,14 +97,24 @@
       <div class="metric-label">{{ item.label }}</div>
       <div class="metric-value">{{ item.value|floatformat:0 }}{% if item.unit == '%' %}%{% endif %}</div>
       <div class="metric-unit">
-        среднее: {{ item.avg|floatformat:0 }}{% if item.unit == '%' %}%{% elif item.unit %} {{ item.unit }}{% endif %}
+        {% if item.unit != '%' %}{{ item.unit }} · {% endif %}среднее: {{ item.avg|floatformat:0 }}{% if item.unit == '%' %}%{% endif %}
       </div>
-      <span class="delta {% if item.up %}delta-up{% else %}delta-down{% endif %}">
-        {% if item.up %}▲ выше{% else %}▼ ниже{% endif %} на {{ item.abs_diff|floatformat:0 }}
-      </span>
+      {% if item.same %}
+        <span class="delta delta-same">≈ на уровне среднего</span>
+      {% elif item.up %}
+        <span class="delta delta-up">▲ выше на {{ item.abs_diff|floatformat:0 }} {{ item.diff_unit }}</span>
+      {% else %}
+        <span class="delta delta-down">▼ ниже на {{ item.abs_diff|floatformat:0 }} {{ item.diff_unit }}</span>
+      {% endif %}
     </div>
   </div>
   {% endfor %}
+  <div class="col-12">
+    <p class="compare-note">
+      п.п. — процентные пункты: разница между долями верных ответов.
+      усв. слов/мин — усвоенные слова в минуту, то есть эффективность E = V · Q.
+    </p>
+  </div>
   {% endif %}
 
 </div>
