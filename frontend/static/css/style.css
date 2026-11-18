@@ -176,7 +176,18 @@ h1, h2, h3, h4, h5, .serif {
   box-shadow: 0 18px 36px rgba(23, 52, 44, 0.1);
   color: var(--ink);
 }
-.card-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 4rem; }
+.card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 5.4rem;
+  margin-bottom: 2.2rem;
+}
+.card-pills {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
 .pill {
   background: rgba(255, 255, 255, 0.75);
   border-radius: 999px;
@@ -335,8 +346,61 @@ h1, h2, h3, h4, h5, .serif {
   gap: 0.5rem;
 }
 
+/* ---------- Результаты: широкая шапка ---------- */
+.page-hero-wide { max-width: none; }
+
+/* ---------- Диагностика и время ---------- */
+.info-card {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  padding: 1.8rem 2rem;
+  border-radius: 28px;
+}
+.info-icon {
+  flex-shrink: 0;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.3rem;
+}
+.info-icon-soft { background: #e8eff9; }
+.info-label { color: var(--muted); font-size: 0.95rem; margin-bottom: 0.2rem; }
+.info-title { font-size: 1.7rem; line-height: 1.2; margin: 0 0 0.4rem; }
+.info-text { margin: 0; }
+.extra-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+
+.badge-success { background: linear-gradient(145deg, #e6f4ec, #cfe6db); }
+.badge-neutral { background: linear-gradient(145deg, #e8eff9, #d3def0); }
+.badge-growth  { background: linear-gradient(145deg, #fcefdf, #f5d9bc); }
+
+/* ---------- Сравнение со средним ---------- */
+.compare-title {
+  font-size: 1.7rem;
+  text-align: center;
+  margin: 1.5rem 0 0.4rem;
+}
+.compare-sub {
+  text-align: center;
+  color: var(--muted);
+  margin: 0;
+}
+.delta {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.2rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 0.9rem;
+}
+.delta-up   { background: #d6ece0; color: #1d5a3a; }
+.delta-down { background: #f8e3c2; color: #8a5a12; }
+
 @media (max-width: 576px) {
-  .hero { padding: 3rem 1.4rem; border-radius: 28px; }
-  .page-hero, .reading-card { padding: 1.6rem 1.4rem; }
-  .question-card { padding: 1.4rem; }
+  .info-card { flex-direction: column; text-align: center; padding: 1.5rem; }
 }

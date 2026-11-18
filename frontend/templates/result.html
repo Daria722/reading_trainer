@@ -2,15 +2,23 @@
 {% block title %}Результаты — {{ result.text.title }}{% endblock %}
 {% block content %}
 
-<section class="page-hero tone-blue">
+<section class="page-hero page-hero-wide tone-blue">
   <span class="eyebrow">Шаг 3 · Результаты</span>
   <h1 class="page-hero-title">{{ result.text.title }}</h1>
   <div class="page-hero-meta">
     <span class="pill">{{ result.correct_answers }} из {{ result.questions_total }} верных ответов</span>
+    {% if result.text.difficulty %}
+    <span class="pill pill-{{ result.text.difficulty }}"
+          title="Индекс читабельности: {{ result.text.readability_score|floatformat:0 }}">
+      Сложность текста: {{ result.text.get_difficulty_display }}
+    </span>
+    {% endif %}
   </div>
 </section>
 
 <div class="row g-4">
+
+  <!-- Основные показатели -->
   <div class="col-md-6 col-lg-3">
     <div class="metric-card tone-white">
       <div class="metric-label">Скорость чтения V</div>
@@ -33,22 +41,75 @@
     </div>
   </div>
   <div class="col-md-6 col-lg-3">
-    <div class="metric-card tone-lilac accent-border">
+    <div class="metric-card tone-lilac">
       <div class="metric-label">Эффективность E</div>
       <div class="metric-value">{{ result.efficiency|floatformat:1 }}</div>
       <div class="metric-unit">E = V · Q</div>
     </div>
   </div>
+
+  <!-- Диагностика -->
+  <div class="col-lg-8">
+    <div class="info-card badge-{{ badge.category }}">
+      <div class="info-icon">{{ badge.icon }}</div>
+      <div>
+        <div class="info-label">Диагностика чтения</div>
+        <h2 class="info-title">{{ badge.title }}</h2>
+        <p class="info-text">{{ badge.description }}</p>
+        {% if extra_badges %}
+        <div class="extra-badges">
+          {% for b in extra_badges %}
+          <span class="pill">{{ b.icon }} {{ b.title }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Время относительно норматива -->
+  <div class="col-lg-4">
+    <div class="info-card tone-white">
+      <div class="info-icon info-icon-soft">⏱</div>
+      <div>
+        <div class="info-label">Время чтения</div>
+        <h2 class="info-title">
+          {% if faster %}Быстрее нормы{% else %}Медленнее нормы{% endif %}
+        </h2>
+        <p class="info-text">
+          {{ time_diff|floatformat:0 }} с {% if faster %}в запасе{% else %}сверх норматива{% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Сравнение с другими попытками -->
+  {% if compare %}
+  <div class="col-12">
+    <h3 class="compare-title">Сравнение с другими прохождениями</h3>
+    <p class="compare-sub">
+      Среднее по другим попыткам на этом тексте: {{ stats.attempts }}. Текущая попытка не учитывается.
+    </p>
+  </div>
+  {% for item in compare %}
+  <div class="col-md-4">
+    <div class="metric-card tone-white">
+      <div class="metric-label">{{ item.label }}</div>
+      <div class="metric-value">{{ item.value|floatformat:0 }}{% if item.unit == '%' %}%{% endif %}</div>
+      <div class="metric-unit">
+        среднее: {{ item.avg|floatformat:0 }}{% if item.unit == '%' %}%{% elif item.unit %} {{ item.unit }}{% endif %}
+      </div>
+      <span class="delta {% if item.up %}delta-up{% else %}delta-down{% endif %}">
+        {% if item.up %}▲ выше{% else %}▼ ниже{% endif %} на {{ item.abs_diff|floatformat:0 }}
+      </span>
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+
 </div>
 
-<p class="text-center mt-5 fs-5">
-  {% if result.reading_time_seconds > result.norm_time_seconds %}
-    Вы читали медленнее расчётного норматива.
-  {% else %}
-    Вы уложились в расчётный норматив времени.
-  {% endif %}
-</p>
-<div class="text-center mt-4">
+<div class="text-center mt-5">
   <a href="{% url 'text_list' %}" class="btn-main">К списку текстов</a>
 </div>
 {% endblock %}

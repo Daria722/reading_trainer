@@ -21,7 +21,9 @@
 
 <section id="texts">
   <h2 class="section-title">Выберите текст</h2>
-  <p class="section-sub">Каждый текст сопровождается вопросами</p>
+  <p class="section-sub">
+    Сложность каждого текста рассчитывается автоматически по индексу читабельности Флеша.
+  </p>
 
   <div class="row g-4">
     {% for t in texts %}
@@ -29,9 +31,19 @@
       <a href="{% url 'text_read' t.pk %}"
          class="text-card {% cycle 'tone-mint' 'tone-peach' 'tone-blue' 'tone-lilac' %}"
          data-num="{{ forloop.counter|stringformat:'02d' }}">
-        <div class="card-pills">
-          <span class="pill">{{ t.word_count }} слов</span>
-          <span class="pill">≈ {% widthratio t.word_count 180 1 %} мин</span>
+        <div class="card-meta">
+          <div class="card-pills">
+            <span class="pill">Слов: {{ t.word_count }}</span>
+            <span class="pill">≈ {{ t.reading_minutes }} мин</span>
+          </div>
+          {% if t.difficulty %}
+          <div class="card-pills">
+            <span class="pill pill-{{ t.difficulty }}"
+                  title="Индекс читабельности: {{ t.readability_score|floatformat:0 }}">
+              Сложность: {{ t.get_difficulty_display }}
+            </span>
+          </div>
+          {% endif %}
         </div>
         <h3 class="card-title-serif">{{ t.title }}</h3>
         <p class="card-desc">Проверьте, как быстро вы читаете и сколько запоминаете.</p>

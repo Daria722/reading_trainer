@@ -1,19 +1,37 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 from django.contrib.auth.models import User
+from .services import calculate_readability
 
 class Text(models.Model):
+    DIFFICULTY_CHOICES = [
+        ('easy', 'Лёгкий'),
+        ('medium', 'Средний'),
+        ('hard', 'Сложный'),
+    ]
     title = models.CharField(max_length=255, verbose_name="Название текста")
     content = models.TextField(verbose_name="Текст для чтения")
     word_count = models.PositiveIntegerField(verbose_name="Количество слов", default=0)
+    readability_score = models.FloatField(default=0, verbose_name="Индекс читабельности")
+    difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES,
+                                  blank=True, verbose_name="Сложность")
+    
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     def save(self, *args, **kwargs):
-        # Автоматически считаем количество слов при сохранении
         if self.content:
             self.word_count = len(self.content.split())
+            r = calculate_readability(self.content)
+            self.readability_score = r['score']
+            self.difficulty = r['difficulty']
         super().save(*args, **kwargs)
+
+    @property
+    def reading_minutes(self):
+        """Расчётное время чтения по нормативу, минимум 1 минута."""
+        return max(1, round(self.word_count / settings.NORM_WPM))    
 
     def __str__(self):
         return self.title

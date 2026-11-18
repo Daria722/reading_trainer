@@ -11,6 +11,12 @@
   </div>
   <div class="page-hero-meta">
     <span class="pill">{{ text.word_count }} слов</span>
+        {% if text.difficulty %}
+    <span class="pill pill-{{ text.difficulty }}"
+          title="Индекс читабельности: {{ text.readability_score|floatformat:0 }}">
+      Сложность: {{ text.get_difficulty_display }}
+    </span>
+    {% endif %}
     <span class="pill">Читайте в своём темпе</span>
   </div>
 </section>

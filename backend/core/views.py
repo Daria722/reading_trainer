@@ -8,6 +8,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Text, Question, Answer, ReadingResult
 from .services import calculate_metrics
 
+from django.db.models import Avg, Count
+from .badges import get_badges
+
 
 def text_list(request):
     texts = Text.objects.all()
@@ -93,7 +96,42 @@ def text_test(request, pk):
 
     return redirect('result', pk=result.pk)
 
-
 def result(request, pk):
-    result = get_object_or_404(ReadingResult, pk=pk)
-    return render(request, 'result.html', {'result': result})
+    result = get_object_or_404(ReadingResult.objects.select_related('text'), pk=pk)
+    badge, extra_badges = get_badges(result.words_per_minute, result.comprehension)
+
+    # Сравнение с другими попытками на этом же тексте (текущая не учитывается)
+    others = ReadingResult.objects.filter(text=result.text).exclude(pk=result.pk)
+    stats = others.aggregate(
+        attempts=Count('pk'),
+        avg_wpm=Avg('words_per_minute'),
+        avg_q=Avg('comprehension'),
+        avg_e=Avg('efficiency'),
+    )
+
+    compare = []
+    if stats['attempts']:
+        pairs = [
+            ('Скорость V', result.words_per_minute, stats['avg_wpm'], 'слов/мин', 0),
+            ('Понимание Q', result.comprehension, stats['avg_q'], '%', 0),
+            ('Эффективность E', result.efficiency, stats['avg_e'], '', 0),
+        ]
+        for label, value, avg, unit, _ in pairs:
+            diff = value - avg
+            compare.append({
+                'label': label, 'value': value, 'avg': avg, 'unit': unit,
+                'up': diff >= 0, 'abs_diff': abs(diff),
+            })
+
+    time_diff = abs(result.reading_time_seconds - result.norm_time_seconds)
+    faster = result.reading_time_seconds <= result.norm_time_seconds
+
+    return render(request, 'result.html', {
+        'result': result,
+        'badge': badge,
+        'extra_badges': extra_badges,
+        'stats': stats,
+        'compare': compare,
+        'time_diff': time_diff,
+        'faster': faster,
+    })
